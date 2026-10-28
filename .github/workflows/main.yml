@@ -9,6 +9,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Find project files
+        run: |
+          f=$(find . -name icons.py -not -path './node_modules/*' | head -1)
+          if [ -z "$f" ]; then
+            echo "icons.py was not found. Files in the repo:"
+            ls -R | head -50
+            exit 1
+          fi
+          d=$(dirname "$f")
+          echo "Project folder: $d"
+          if [ "$d" != "." ]; then cp -r "$d"/. . ; fi
+          ls
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
